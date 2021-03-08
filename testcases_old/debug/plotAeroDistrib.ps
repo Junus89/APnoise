@@ -1,0 +1,46 @@
+set term pdf
+set output 'BladeAeroDistrib.pdf'
+# Set overall margins for the combined set of plots and size them
+# to generate a requested inter-plot spacing
+#
+if (!exists("MP_LEFT"))   MP_LEFT = .1
+if (!exists("MP_RIGHT"))  MP_RIGHT = .95
+if (!exists("MP_BOTTOM")) MP_BOTTOM = .05
+if (!exists("MP_TOP"))    MP_TOP = 0.8
+if (!exists("MP_xGAP"))   MP_xGAP = 0.13
+if (!exists("MP_yGAP"))   MP_yGAP = 0.162
+
+set multiplot layout 2,3 columnsfirst title "{/:Bold=11 Blade Aerodynamic Distribution}" \
+              margins screen MP_LEFT, MP_RIGHT, MP_BOTTOM, MP_TOP spacing screen MP_xGAP, MP_yGAP
+
+set format y "%.1f"
+set key box opaque
+#set ylabel 'ylabel'
+set xtics 0,0.5,1
+set xrange[0.2:1]
+set yrange[0:0.5]
+unset key
+set title 'Ticknes distrib';
+plot 'Thickns_distrib.txt' u 1:2 w l lw 1.5;
+
+set xrange[0.2:1]
+set yrange[0:1.5]
+set title 'Lift distrib';
+plot 'Cl_distrib.txt' u 1:2 w l lw 1.5;
+
+
+set xrange[0.2:1]
+set yrange[0:50]
+set title 'Twist angle distrib';
+plot 'Twist_distrib.txt' u 1:2 w l lw 1.5;
+
+set xrange[0.2:1]
+set yrange[0:0.5]
+set title 'Drag distrib';
+plot 'Cd_distrib.txt' u 1:2 w l lw 1.5;
+
+
+set xrange[0.2:1]
+set yrange[0:0.5]
+set title 'Bladewidth distrib';
+plot 'BladeWidth_distrib.txt' u 1:2 w l lw 1.5;
