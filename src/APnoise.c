@@ -811,7 +811,7 @@
       sprintf(fn+strlen(fn),"_SPLH_Mic%d.txt",j); sprintf(fnr+strlen(fnr),"_SPLHr_Mic%d.txt",j);
       /* Total */
       fp[j]=fopen(fn,"w");
-      fprintf(fp[j],"%5s %5s %5s %s \n","# f [hz] ", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
+      fprintf(fp[j],"%5s %5s %5s %s \n","# BPF [hz] ", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
       for(int m=1;m<prop.HNum+1;m++){
         obsrvr.Mics.SPL[m][j]=20*log10(fabs(obsrvr.Mics.OpT[m][j]+obsrvr.Mics.OpL[m][j])/p_ref);
 
