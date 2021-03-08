@@ -803,7 +803,6 @@
     }
   }
   /* Total */
-//  for(int m=1;m<prop.HNum+1;m++){
     for(int j=0;j<obsrvr.FFNum;j++){
       FILE *fp[j], *fpr[j];
       char fn[2048], fnr[2048];
@@ -811,9 +810,10 @@
       strcat(fn,caseIN.caseName); strcat(fnr,caseIN.caseName);
       sprintf(fn+strlen(fn),"_SPLH_Mic%d.txt",j); sprintf(fnr+strlen(fnr),"_SPLHr_Mic%d.txt",j);
       /* Total */
-      fp[j]=fopen(fn,"w"); fpr[j]=fopen(fnr,"w");
+      fp[j]=fopen(fn,"w");
+      fprintf(fp[j],"%5s %5s %5s %s \n","# f [hz] ", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
       for(int m=1;m<prop.HNum+1;m++){
-      obsrvr.Mics.SPL[m][j]=20*log10(fabs(obsrvr.Mics.OpT[m][j]+obsrvr.Mics.OpL[m][j])/p_ref);
+        obsrvr.Mics.SPL[m][j]=20*log10(fabs(obsrvr.Mics.OpT[m][j]+obsrvr.Mics.OpL[m][j])/p_ref);
 
 /*      if(m==1) fprintf(fsplr,"%4.4f %4.4f %4.4f %4.4f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[1][j] \
         ,obsrvr.Mics.SPLL[1][j],obsrvr.Mics.SPL[1][j]);
@@ -822,10 +822,16 @@
 */
        fprintf(fp[j],"%4.6f %4.6f %4.6f %4.6f\n",m*freq,obsrvr.Mics.SPLT[m][j],obsrvr.Mics.SPLL[m][j] \
         ,obsrvr.Mics.SPL[m][j]);
-       fprintf(fpr[j],"%4.4f %4.4f %4.4f %4.4f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[m][j] \
+    }
+    fclose(fp[j]);
+    fpr[j]=fopen(fnr,"w");
+    fprintf(fpr[j],"%5s %5s %5s %s \n","Theta [deg]", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
+    for(int m=1;m<prop.HNum+1;m++){
+       fprintf(fpr[j],"%4.6f %4.6f %4.6f %4.6f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[m][j] \
         ,obsrvr.Mics.SPLL[m][j],obsrvr.Mics.SPL[m][j]);
     }
-    fclose(fp[j]); fclose(fpr[j]);
+
+    fclose(fpr[j]);
   }
 /*  fclose(fsplm);
   fclose(fsplr);

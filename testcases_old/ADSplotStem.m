@@ -66,7 +66,7 @@ box on
 xlim([0,1200]);
 ylim([0,100]);
 %YF=load('ADScase8_NB7RPM1900_SPLBMm.txt');
-YF=load('SPL/ADScase8_SPLH_Mic0.txt');
+YF=load('SPL/ADScase8_SPLH_Mic1.txt');
 LF=load('fwh.Mic_131_spl_13_NB7RPM1900.txt');
 HF=load('fwh.Mic_131_spl_13_HFNB7RPM1900.txt');
 

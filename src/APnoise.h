@@ -229,8 +229,6 @@ enum runtype{
 
 
 
-
-
 /* Utility functions */
 
   void APnoise_error(char error_text[],\
