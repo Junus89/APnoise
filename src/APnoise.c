@@ -734,16 +734,14 @@
   rmdir("SPL",0777);
   mkdir("SPL",0777);
 
-/*
-  FILE *fsplm,*fsplr;
-  char fnm[256];strcpy(fnm,caseIN.caseName);
-  char fnr[256];strcpy(fnr,caseIN.caseName);
 
-  strcat(fnm,"_SPLHansonm.txt");
-  strcat(fnr,"_SPLHansonr.txt");
+  FILE *fsplm;
+  char fnm[256];
+  strcpy(fnm,"SPL/");
+  strcat(fnm,caseIN.caseName);
+  sprintf(fnm+strlen(fnm),"_OASPL.txt");
   fsplm=fopen(fnm,"w");
-  fsplr=fopen(fnr,"w");
-*/
+
   double p_ref=2e-5;
   double complex ii=(0.0+1.0*I);
   double freq=prop.NB*prop.omega/2/PI;
@@ -803,39 +801,36 @@
     }
   }
   /* Total */
-    for(int j=0;j<obsrvr.FFNum;j++){
-      FILE *fp[j], *fpr[j];
-      char fn[2048], fnr[2048];
-      strcpy(fn,"SPL/"); strcpy(fnr,"SPL/");
-      strcat(fn,caseIN.caseName); strcat(fnr,caseIN.caseName);
-      sprintf(fn+strlen(fn),"_SPLH_Mic%d.txt",j); sprintf(fnr+strlen(fnr),"_SPLHr_Mic%d.txt",j);
-      /* Total */
-      fp[j]=fopen(fn,"w");
-      fprintf(fp[j],"%5s %5s %5s %s \n","# BPF [hz] ", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
-      for(int m=1;m<prop.HNum+1;m++){
-        obsrvr.Mics.SPL[m][j]=20*log10(fabs(obsrvr.Mics.OpT[m][j]+obsrvr.Mics.OpL[m][j])/p_ref);
-
-/*      if(m==1) fprintf(fsplr,"%4.4f %4.4f %4.4f %4.4f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[1][j] \
-        ,obsrvr.Mics.SPLL[1][j],obsrvr.Mics.SPL[1][j]);
-       fprintf(fsplm,"%4.6f %4.6f %4.6f %4.6f\n",m*freq,obsrvr.Mics.SPLT[m][0],obsrvr.Mics.SPLL[m][0] \
-      ,obsrvr.Mics.SPL[m][0]);
-*/
-       fprintf(fp[j],"%4.6f %4.6f %4.6f %4.6f\n",m*freq,obsrvr.Mics.SPLT[m][j],obsrvr.Mics.SPLL[m][j] \
-        ,obsrvr.Mics.SPL[m][j]);
-    }
-    fclose(fp[j]);
-    fpr[j]=fopen(fnr,"w");
-    fprintf(fpr[j],"%5s %5s %5s %s \n","Theta [deg]", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
+  fprintf(fsplm,"%5s %5s %5s %5s \n","# x [m] ", "y [m]", "z [m]", "OASPL [dB]");
+  for(int j=0;j<obsrvr.FFNum;j++){
+    double OASPL=0.0, tempoaspl=0.0;
+    FILE *fp[j], *fpr[j];
+    char fn[2048], fnr[2048];
+    strcpy(fn,"SPL/"); strcpy(fnr,"SPL/");
+    strcat(fn,caseIN.caseName); strcat(fnr,caseIN.caseName);
+    sprintf(fn+strlen(fn),"_SPLH_Mic%d.txt",j); sprintf(fnr+strlen(fnr),"_SPLHr_Mic%d.txt",j);
+    /* Total */
+    fp[j]=fopen(fn,"w");
+    fprintf(fp[j],"%5s %5s %5s %5s \n","# BPF [hz] ", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
     for(int m=1;m<prop.HNum+1;m++){
-       fprintf(fpr[j],"%4.6f %4.6f %4.6f %4.6f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[m][j] \
-        ,obsrvr.Mics.SPLL[m][j],obsrvr.Mics.SPL[m][j]);
-    }
-
-    fclose(fpr[j]);
+      obsrvr.Mics.SPL[m][j]=20*log10(fabs(obsrvr.Mics.OpT[m][j]+obsrvr.Mics.OpL[m][j])/p_ref);
+      tempoaspl+=pow((obsrvr.Mics.OpT[m][j]+obsrvr.Mics.OpL[m][j]),2);
+      fprintf(fp[j],"%4.6f %4.6f %4.6f %4.6f\n",m*freq,obsrvr.Mics.SPLT[m][j],obsrvr.Mics.SPLL[m][j] \
+        ,obsrvr.Mics.SPL[m][j]);
   }
-/*  fclose(fsplm);
-  fclose(fsplr);
-*/
+  fclose(fp[j]);
+  fpr[j]=fopen(fnr,"w");
+  fprintf(fpr[j],"%5s %5s %5s %5s \n","Theta [deg]", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
+  for(int m=1;m<prop.HNum+1;m++){
+     fprintf(fpr[j],"%4.6f %4.6f %4.6f %4.6f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[m][j] \
+      ,obsrvr.Mics.SPLL[m][j],obsrvr.Mics.SPL[m][j]);
+  }
+  fclose(fpr[j]);
+  OASPL=20*log10(sqrt(tempoaspl)/p_ref);
+  fprintf(fsplm,"%4.4f %4.4f %4.4f %4.4f\n",obsrvr.FFcoords[j].x[0],obsrvr.FFcoords[j].x[1],obsrvr.FFcoords[j].x[2],OASPL);
+  }
+  fclose(fsplm);
+
   if(DEBUG==1){
     printf("obsrvr numbers = %d, num mics = %d\n",obsrvr.FFNum,obsrvr.Mics.numMics);
     printf("blade angle = %lf\n",prop.DbDev.Bangle[10]);
