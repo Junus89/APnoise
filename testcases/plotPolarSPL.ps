@@ -1,4 +1,4 @@
-#Created by YF
+ #Created by YF
 set term pdf
 set output'polarSPL.pdf'
 set polar
@@ -37,11 +37,13 @@ set key at graph 1.5, 1.1
 
 
 #Hanson
-plot 'ADScase1_SPLHansonrs.txt' u ($1+180):2 w l lw 1.420 lc 3 ti 'Hanson Thickns'\
-     ,'ADScase1_SPLHansonrs.txt' u ($1+180):3 w l lw 1.420 lc 4 ti 'Hanson Loading'\
-     ,'ADScase1_SPLHansonrs.txt' u ($1+180):4 w l lw 2.50 lc 7ti 'Hanson Total'\
-     ,'Directivity-xzs_NB5RPM1400.txt' u 1:2 w l lw 2.5 lc 2 ti 'BEMT+Pnoise'\
-     ,'Directivity-xzs_HfNB5RPM1400.txt' u 1:2 w l lw 2.5 lc 1 ti 'High-fidelity'\
+plot 'txt/ADScase8_SPLHansonrs.txt' u ($1+180):2 w l lw 1.420 lc 3 ti 'Hanson Thickns'\
+     ,'txt/ADScase8_SPLHansonrs.txt' u ($1+180):3 w l lw 1.420 lc 4 ti 'Hanson Loading'\
+     ,'txt/ADScase8_SPLHansonrs.txt' u ($1+180):4 w l lw 2.50 lc 7 ti 'Hanson Total'\
+     ,'Directivity-xzs_NB7RPM1900.txt' u 1:2 w l lw 2.5 lc 2 ti 'BEMT+Pnoise'\
+     ,'Directivity-xzs_T_N7RPM1900.txt' u 1:2 w l lw 1.5 lc 8 ti 'BEMT+Pnoise T'\
+     ,'Directivity-xzs_L_N7RPM1900.txt' u 1:2 w l lw 1.5 lc 18 ti 'BEMT+Pnoise L'\
+     ,'Directivity-xzs_HfNB7RPM1900.txt' u 1:2 w l lw 2.5 lc 1 ti 'High-fidelity'\
 #BM
 #plot 'BMADScase8_SPLBMrs.txt' u ($1+180):2 w l lw 1.420 lc 3 ti 'Hanson Thickns'\
 #     ,'BMADScase8_SPLBMrs.txt' u ($1+180):3 w l lw 1.420 lc 4 ti 'Hanson Loading'\

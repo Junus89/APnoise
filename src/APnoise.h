@@ -454,6 +454,12 @@ enum runtype{
                          AtmData atm,\
                          ObserverData obsrvr,\
                          int m);
+/*---------------------------------------------------------------------
+                 OTHER UNITILITY FUNCTIONS                             
+---------------------------------------------------------------------*/
+
+void STANDARD_ATMOSPHERE(const double xi_altitude, double *xo_density, double *xo_pressure,
+				           double *xo_temperature, double *xo_sound_speed);
 
   double get_cpu_time(clock_t start,\
                       clock_t end);

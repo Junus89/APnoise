@@ -735,12 +735,12 @@
   mkdir("SPL",0777);
 
 
-  FILE *fsplm;
-  char fnm[256];
-  strcpy(fnm,"SPL/");
-  strcat(fnm,caseIN.caseName);
-  sprintf(fnm+strlen(fnm),"_OASPL.txt");
-  fsplm=fopen(fnm,"w");
+  FILE *fsplm=NULL, *fallMic1m=NULL;
+  char fnm[256], fnmq[256];
+  strcpy(fnm,"SPL/"); strcpy(fnmq,"SPL/");
+  strcat(fnm,caseIN.caseName); strcat(fnmq,caseIN.caseName);
+  sprintf(fnm+strlen(fnm),"_OASPL.txt"); sprintf(fnmq+strlen(fnmq),"_allMics1Harmonic.txt");
+  fsplm=fopen(fnm,"w"); fallMic1m=fopen(fnmq,"w");
 
   double p_ref=2e-5;
   double complex ii=(0.0+1.0*I);
@@ -802,6 +802,7 @@
   }
   /* Total */
   fprintf(fsplm,"%5s %5s %5s %5s \n","# x [m] ", "y [m]", "z [m]", "OASPL [dB]");
+  fprintf(fallMic1m,"%5s %5s %5s %5s \n","# Theta [deg]", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
   for(int j=0;j<obsrvr.FFNum;j++){
     double OASPL=0.0, tempoaspl=0.0;
     FILE *fp[j], *fpr[j];
@@ -820,15 +821,18 @@
   }
   fclose(fp[j]);
   fpr[j]=fopen(fnr,"w");
-  fprintf(fpr[j],"%5s %5s %5s %5s \n","Theta [deg]", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
+  fprintf(fpr[j],"%5s %5s %5s %5s \n","# Theta [deg]", "SPL_Th [dB]", "SPL_L [dB]", "SPL [dB]");
   for(int m=1;m<prop.HNum+1;m++){
      fprintf(fpr[j],"%4.6f %4.6f %4.6f %4.6f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[m][j] \
       ,obsrvr.Mics.SPLL[m][j],obsrvr.Mics.SPL[m][j]);
+     if(m==1) fprintf(fallMic1m,"%4.6f %4.6f %4.6f %4.6f\n",(180-obsrvr.theta[j]*180.0/PI),obsrvr.Mics.SPLT[1][j] \
+      ,obsrvr.Mics.SPLL[1][j],obsrvr.Mics.SPL[1][j]);
   }
   fclose(fpr[j]);
   OASPL=20*log10(sqrt(tempoaspl)/p_ref);
   fprintf(fsplm,"%4.4f %4.4f %4.4f %4.4f\n",obsrvr.FFcoords[j].x[0],obsrvr.FFcoords[j].x[1],obsrvr.FFcoords[j].x[2],OASPL);
   }
+  fclose(fallMic1m);
   fclose(fsplm);
 
   if(DEBUG==1){
@@ -1155,7 +1159,7 @@
   26.02.2021
   -------------------------------------------------------------------*/
   {
-  const char* thisroutine="d5_t *freader5col(...)";
+  const char* thisroutine="d5_t *freader5col";
 
   d5_t *data=NULL;
   d5_t data_tmp;
@@ -1702,7 +1706,7 @@ char* cutoffstr(const char* str,\
 ---------------------------------------------------------------------*/
 double complex qsimp(double (*func)(double), double a, double b, double kxx)
 {
-  char* thisroutine="double qsimp(...)";
+  char* thisroutine="double complex qsimp";
   double EPS=1e-6;
   int JMAX=45;
   double complex trapzd(double (*func)(double), double a, double b,double kxx, int n);
@@ -1726,7 +1730,7 @@ double complex qsimp(double (*func)(double), double a, double b, double kxx)
 
 double complex trapzd(double (*func)(double), double a, double b, double kxx, int n)
 {
-  char* thisroutine="double trapzd(...)";
+  char* thisroutine="double complex trapzd";
   double complex fe1=(0.0+0.0*I);
   double x,tnm,sum,del;
   static double complex s;
@@ -1901,6 +1905,28 @@ double complex trapzd(double (*func)(double), double a, double b, double kxx, in
   }
   return psiL;
   }
+
+void STANDARD_ATMOSPHERE(const double xi_altitude, double *xo_density, double *xo_pressure,
+				           double *xo_temperature, double *xo_sound_speed)
+{
+	// locals
+	double altitude;
+
+	// housekeeping
+	altitude  = xi_altitude * 1e-5;
+	
+	// density calculation
+	*xo_density = 0.0023769 * pow(1.0 - altitude * (0.68753 -0.003264 * altitude), 4.256);
+	
+	// temperature calculation
+	*xo_temperature  = 518.69 * (1.0 + 0.003298 * altitude * altitude - 0.687532 * altitude);
+	
+	// pressure calculation
+	*xo_pressure  = 1716.5 * (*xo_density) * (*xo_temperature);
+
+	// compute speed of sound
+	*xo_sound_speed  = 1116.45 * (1.0 - altitude * (0.68753 -0.003264 * altitude));
+}
 
 
   double get_cpu_time(clock_t start,\
