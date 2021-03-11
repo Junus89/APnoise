@@ -1,0 +1,65 @@
+ #Created by YF
+set term pdf
+set output'polarSPL.pdf'
+set polar
+set angle degree
+set size square
+set tmargin 3
+set bmargin 3
+#set key out vert nobox
+
+set style line 1 lc rgb 'gray80' lt -1 lw 2
+set grid polar ls 1
+
+unset border
+unset xtics
+unset ytics
+
+f_maxGain=90. #max gain must be a floating point
+minGain=0  #min gain must be a integer
+
+tickstep=10 #ticks every 10 dB
+numticks=9
+f_numticks=9.
+
+set rrange [0:95]
+set rtics tickstep format '' scale 0
+
+set label "270\260" center at first 0, first -f_maxGain*1.2
+set label "180\260" right at first -f_maxGain*1.1,0
+set label "90\260" center at first 0, first f_maxGain*1.2
+set label "0\260" left at first f_maxGain*1.1, 0
+
+set for [i=.1:numticks] label at first f_maxGain*0.001, first f_maxGain*((i/f_numticks)+0.007) sprintf("%d dB", minGain+(i*10))
+unset raxis
+set key
+set key at graph 1.5, 1.1
+
+
+#Hanson
+plot "<paste SPL/ADScase3_allMics1HarmonicS.txt SPL/ADScase8_allMics1HarmonicS.txt" u ($1+180):(abs($2-$6)) w l lw 2.50 lc -1 ti ' Delta Thickness'\
+    ,"<paste SPL/ADScase3_allMics1HarmonicS.txt SPL/ADScase8_allMics1HarmonicS.txt" u ($1+180):(abs($3-$7)) w l lw 2.50 lc 2 ti ' Delta Loading'\
+    ,"<paste SPL/ADScase3_allMics1HarmonicS.txt SPL/ADScase8_allMics1HarmonicS.txt" u ($1+180):(abs($4-$8)) w l lw 2.50 lc 1 ti ' Delta Total'\
+#plot 'SPL/ADScase3_allMics1HarmonicS.txt' u ($1+180):2 w l lw 1.420 lc 3 ti 'NB 5 Hanson Thickns'\
+#     ,'SPL/ADScase3_allMics1HarmonicS.txt' u ($1+180):3 w l lw 1.420 lc 4 ti 'NB 5 Hanson Loading'\
+#     ,'SPL/ADScase3_allMics1HarmonicS.txt' u ($1+180):4 w l lw 2.50 lc 7 ti 'NB 5 Hanson Total'\
+#     ,'SPL/ADScase8_allMics1HarmonicS.txt' u ($1+180):2 w l lw 1.420 lc -1 ti 'NB 7 Hanson Thickns'\
+#     ,'SPL/ADScase8_allMics1HarmonicS.txt' u ($1+180):3 w l lw 1.420 lc 1 ti 'NB 7 Hanson Loading'\
+#     ,'SPL/ADScase8_allMics1HarmonicS.txt' u ($1+180):4 w l lw 2.50 lc 5 ti 'NB 7 Hanson Total'\
+#     ,'Directivity-xzs_T_N5RPM1400.txt' u ($1*-1):($2*-1) w l lw 1.5 lc 8 ti 'BEMT+Pnoise T'\
+#     ,'Directivity-xzs_L_N5RPM1400.txt' u ($1*-1):($2*-1) w l lw 1.5 lc 5 ti 'BEMT+Pnoise L'\
+#     ,'Directivity-xzs_NB5RPM1400.txt' u ($1*-1):($2*-1) w l lw 2.5 lc 2 ti 'BEMT+Pnoise Total'\
+#     ,'Directivity-xzs_HfNB5RPM1400.txt' u 1:2 w l lw 2.5 lc 1 ti 'High-fidelity'\
+#BM
+#plot 'BMADScase8_SPLBMrs.txt' u ($1+180):2 w l lw 1.420 lc 3 ti 'Hanson Thickns'\
+#     ,'BMADScase8_SPLBMrs.txt' u ($1+180):3 w l lw 1.420 lc 4 ti 'Hanson Loading'\
+#     ,'BMADScase8_SPLBMrs.txt' u ($1+180):4 w l lw 2.50 lc 7ti 'Hanson Total'\
+#     ,'Directivity-xzs_NB7RPM1900.txt' u 1:2 w l lw 2.5 lc 2 ti 'BEMT+Pnoise'\
+#     ,'Directivity-xzs_HfNB7RPM1900.txt' u 1:2 w l lw 2.5 lc 1 ti 'High-fidelity'\
+
+
+
+
+
+
+

@@ -125,17 +125,23 @@ if(obsrvr.ifRead==1){
     obsrvr.S0[i]=sqrt(pow(obsrvr.FFcoords[i].x[0],2)+Bet*Bet*pow(obsrvr.Y[i],2));
     obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i]);
 /*
-    if(obsrvr.FFcoords[i].x[0]>0 && obsrvr.FFcoords[i].x[1]>0){
-      obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i]);
-    }
-    if(obsrvr.FFcoords[i].x[0]<0 && obsrvr.FFcoords[i].x[1]>0){
-      obsrvr.theta[i]=PI-acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i]);
-    }
-    if(obsrvr.FFcoords[i].x[0]<0 && obsrvr.FFcoords[i].x[1]<0){
-      obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i])+PI;
-    }
-    if(obsrvr.FFcoords[i].x[0]>0 && obsrvr.FFcoords[i].x[1]<0){
-      obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i])+3/2*PI;
+    // xz-plane
+    if(fabs(obsrvr.FFcoords[i].x[1])<=0.0001){ 
+      if(obsrvr.FFcoords[i].x[0]>0 && obsrvr.FFcoords[i].x[2]>0){
+        obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i]);
+      }
+      if(obsrvr.FFcoords[i].x[0]<0 && obsrvr.FFcoords[i].x[2]>0){
+        obsrvr.theta[i]=PI-acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i]);
+      }
+      if(obsrvr.FFcoords[i].x[0]<0 && obsrvr.FFcoords[i].x[2]<0){
+        obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i])+3/2*PI;
+      }
+      if(obsrvr.FFcoords[i].x[0]>0 && obsrvr.FFcoords[i].x[2]<0){
+        obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i])+3/2*PI;
+      }
+      if(obsrvr.FFcoords[i].x[0]<=0.9e-3 && obsrvr.FFcoords[i].x[2]<0){
+        obsrvr.theta[i]=acos(obsrvr.FFcoords[i].x[0]/obsrvr.S[i])+PI;
+      }
     }
 */
   }

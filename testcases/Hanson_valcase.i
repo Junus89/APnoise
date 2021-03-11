@@ -1,15 +1,15 @@
-ADScase8 ...................................... Case name
+ADScase1 ...................................... Case name
 1 ............................................. Solver ID [0: Barry and Magliozzi ;1: Hanson]
 #================ PROPELLER AERO DATA================
 2.5 ........................................... Propeller blade diameter (m)
-7 ............................................. Number of blades
-1900.0 ........................................ RPM
+5 ............................................. Number of blades
+1400.0 ........................................ RPM
 0.2 ........................................... Free stream Mach number
 0.0 ........................................... pitch angle of propeller shaft axis relative to flight direction (deg)
 10 ............................................ Acoustic harmonic numbers
 BladeGeoData.txt .............................. Blade geometry data file
 BladeAeroData.txt ............................. Blade aerodynamics data file
-FD_analytical_blade_in_NB7RPM1900.txt ......... Input file for aerodynamic sources
+FD_analytical_blade_in_NB5RPM1400.txt ......... Input file for aerodynamic sources
 #================= ATMOSPHERE SECTION ===============
 2000.0 ........................................ Flight altitude (m)
 275.15 ........................................ Temperature (K)
